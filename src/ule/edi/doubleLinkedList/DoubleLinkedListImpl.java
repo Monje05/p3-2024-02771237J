@@ -3,6 +3,8 @@ package ule.edi.doubleLinkedList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import org.w3c.dom.Node;
+
 public class DoubleLinkedListImpl<T> implements DoubleList<T> {
 
 
@@ -92,8 +94,8 @@ public class DoubleLinkedListImpl<T> implements DoubleList<T> {
 		if(front == null && last == null) {
 			isEmpty = true;
 		}
-		return false;
-		}
+		return isEmpty;
+	}
 
 
 	@Override
@@ -104,26 +106,72 @@ public class DoubleLinkedListImpl<T> implements DoubleList<T> {
 
 	@Override
 	public void addFirst(T elem) {
-		// TODO Auto-generated method stub
+		if(elem == null) {
+			throw new NullPointerException();
+		}
+		DoubleNode<T> nuevo = new DoubleNode<T>(elem);
+		if(isEmpty()) {
+			front = nuevo;
+			last = nuevo;
+		} 
+		nuevo.next = front;
+		front.prev = nuevo;
+		front = nuevo;
 		
 	}
 
 
 	@Override
 	public void addLast(T elem) {
-		// TODO Auto-generated method stub
+		if(elem == null) {
+			throw new NullPointerException();
+		}
+		DoubleNode<T> nuevo = new DoubleNode<T>(elem);
+		if(isEmpty()) {
+			front = nuevo;
+			last = nuevo;
+		}
+		nuevo.prev = last;
+		last.next = nuevo;
+		last = nuevo;
 		
 	}
 
 
 	@Override
 	public void addPos(T elem, int position) {
-		// TODO Auto-generated method stub
+		if(elem == null) {
+			throw new NullPointerException();
+		}
+		if(position <= 0) {
+			throw new IllegalArgumentException();
+		}
+		if(position == 1) {
+			addFirst(elem);
+			return;
+		}
+		DoubleNode<T> current = front;
+		for(int i = 0; i < position - 2 && current != null; i++) {
+			current = current.next;
+		}
+		if(current == null) {
+			addLast(elem);
+			return;
+		}
+		DoubleNode<T> nuevo = new DoubleNode<T>(elem);
+		nuevo.next = current.next;
+		nuevo.prev = current;
+		if(current.next != null) {
+			current.next.prev = nuevo;
+		}
+		current.next = nuevo;
+		if(nuevo.next == null) {
+			last = nuevo;
+		}
 		
 	}
 
-
-
+	
 	@Override
 	public T getElemPos(int position) {
 		
@@ -232,8 +280,15 @@ public class DoubleLinkedListImpl<T> implements DoubleList<T> {
 
 	@Override
 	public String toString() {
-		// TODO
-		return null;
+		StringBuilder result = new StringBuilder("(");
+		DoubleNode<T> current = front;
+		while (current != null) {
+			result.append(current.elem);
+			result.append(" ");
+			current = current.next;
+		}
+		result.append(")");
+		return result.toString();
 	}
 	
 	@Override

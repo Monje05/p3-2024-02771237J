@@ -91,6 +91,11 @@ public class DoubleLinkedImplTest {
 		Assert.assertEquals("(2 3 7 )", lista.toString());
 	}
 	
+	@Test(expected=NullPointerException.class)
+	public void addElementoNuloLastTest() {
+		DoubleLinkedListImpl<String> lista = new DoubleLinkedListImpl<String>();
+		lista.addFirst(null);
+	}
 	
 	@Test(expected=EmptyCollectionException.class)
 	public void testRemoveLast() throws EmptyCollectionException {
@@ -120,6 +125,18 @@ public class DoubleLinkedImplTest {
 		Assert.assertEquals("(1 2 3 2 7 5 )", lista.toString());
 		lista.addPos("6", 10);
 		Assert.assertEquals("(1 2 3 2 7 5 6 )", lista.toString());
+	}
+
+	@Test (expected = NullPointerException.class)
+	public void testNullElemAddPos() {
+		DoubleLinkedListImpl<String> lista = new DoubleLinkedListImpl<String>();
+		lista.addPos(null,  3);
+	}
+
+	@Test (expected = IllegalArgumentException.class)
+	public void testIllegalPosElemAddPos() {
+		DoubleLinkedListImpl<String> lista = new DoubleLinkedListImpl<String>();
+		lista.addPos("4",  -2);
 	}
 	
 
