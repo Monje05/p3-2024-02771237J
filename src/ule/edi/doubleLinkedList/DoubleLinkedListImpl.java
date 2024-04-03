@@ -90,17 +90,17 @@ public class DoubleLinkedListImpl<T> implements DoubleList<T> {
 
 	@Override
 	public boolean isEmpty() {
-		boolean isEmpty = false;
-		if(front == null && last == null) {
-			isEmpty = true;
-		}
-		return isEmpty;
+		return front == null && last == null;
 	}
 
 
 	@Override
 	public void clear() {
-		//TODO
+		DoubleNode<T> current = front;
+		while(current != last) {
+			current = current.next;
+			current = null;
+		}
 		
 	}
 
@@ -113,10 +113,11 @@ public class DoubleLinkedListImpl<T> implements DoubleList<T> {
 		if(isEmpty()) {
 			front = nuevo;
 			last = nuevo;
-		} 
-		nuevo.next = front;
-		front.prev = nuevo;
-		front = nuevo;
+		} else {
+			nuevo.next = front;
+			front.prev = nuevo;
+			front = nuevo;
+		}
 		
 	}
 
@@ -130,10 +131,11 @@ public class DoubleLinkedListImpl<T> implements DoubleList<T> {
 		if(isEmpty()) {
 			front = nuevo;
 			last = nuevo;
+		} else {
+			nuevo.prev = last;
+			last.next = nuevo;
+			last = nuevo;
 		}
-		nuevo.prev = last;
-		last.next = nuevo;
-		last = nuevo;
 		
 	}
 
@@ -174,25 +176,55 @@ public class DoubleLinkedListImpl<T> implements DoubleList<T> {
 	
 	@Override
 	public T getElemPos(int position) {
-		
-		//TODO
-		return null;
+		if(position < 1 || position > size()) {
+			throw new IllegalArgumentException();
+		}
+		DoubleNode<T> current = front;
+		for(int i = 0; i < position -1; i++) {
+			current = current.next;
+		}
+		return current.elem;
 	}
 
 
 	@Override
 	public int getPosFirst(T elem) {
-		//TODO
-
-		return 0;
+		if(elem == null) {
+			throw new NullPointerException();
+		}
+		DoubleNode<T> current = front;
+		int pos = 1;
+		for(int i = 0; current != null; i++) {
+			if(current.elem.equals(elem)) {
+				pos = i + 1;
+				return pos;
+			}
+			current = current.next;
+		}
+		if(pos == 1) {
+			throw new NoSuchElementException();
+		}
+		return pos;
 	}
 
 
 	@Override
 	public int getPosLast(T elem) {
-		//TODO
-
-		return 0;
+		if(elem == null) {
+			throw new NullPointerException();
+		}
+		DoubleNode<T> current = front;
+		int pos = 1;
+		for(int i = 0; current != null; i++) {
+			if(current.elem.equals(elem)) {
+				pos = i + 1;
+			}
+			current = current.next;
+		}
+		if(pos == 1) {
+			throw new NoSuchElementException();
+		}	
+		return pos;
 	}
 
 	
@@ -229,8 +261,13 @@ public class DoubleLinkedListImpl<T> implements DoubleList<T> {
 
 	@Override
 	public int size() {
-		//TODO
-		return 0;
+		int count = 0;
+		DoubleNode<T> current = front;
+		while(current != null){
+			current = current.next;
+			count++;
+		}
+		return count;
 	}
 
 
@@ -280,15 +317,14 @@ public class DoubleLinkedListImpl<T> implements DoubleList<T> {
 
 	@Override
 	public String toString() {
-		StringBuilder result = new StringBuilder("(");
+		String result = "(";
 		DoubleNode<T> current = front;
 		while (current != null) {
-			result.append(current.elem);
-			result.append(" ");
+			result += current.elem + " ";
 			current = current.next;
 		}
-		result.append(")");
-		return result.toString();
+		result += ")";
+		return result;
 	}
 	
 	@Override
