@@ -90,7 +90,7 @@ public class DoubleLinkedListImpl<T> implements DoubleList<T> {
 
 	@Override
 	public boolean isEmpty() {
-		return front == null && last == null;
+		return size() == 0;
 	}
 
 
@@ -230,17 +230,46 @@ public class DoubleLinkedListImpl<T> implements DoubleList<T> {
 	
 	@Override
 	public T removeLast()  throws EmptyCollectionException{
-		//TODO
-		return null;
+		if(isEmpty()) {
+			throw new EmptyCollectionException("La lista está vacía.");
+		}
+		T removeElement = null;
+		if(size() == 1) {
+			removeElement = front.elem;
+			front = front.next;
+		} else {
+			DoubleNode<T> current = front;
+			while(current.next.next != null) {
+				current = current.next;
+			}
+			removeElement = current.next.elem;
+			current.next = null; 
+		}
+		return removeElement;
 	}
 	
 
 	@Override
 	public T removePos(int pos)  throws EmptyCollectionException{
-		// TODO
-		return null;
-	
-
+		if(isEmpty()) {
+			throw new EmptyCollectionException("La lista está vacía.");
+		}
+		if(pos < 1 || pos > size()) {
+			throw new IllegalArgumentException();
+		}
+		DoubleNode<T> current = front;
+		for(int i = 0; i < pos - 2; i++) {
+			current = current.next;
+		}
+		T removeElement = null;
+		if(pos ==  1) {
+			removeElement = front.elem;
+			front = front.next;
+		} else {
+			removeElement = current.next.elem;
+			current.next = current.next.next;
+		}
+		return removeElement;
 	}
 
 
