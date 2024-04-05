@@ -275,8 +275,38 @@ public class DoubleLinkedListImpl<T> implements DoubleList<T> {
 
 	@Override
 	public int removeN(T elem, int times) throws EmptyCollectionException {
-		// TODO Auto-generated method stub
-		return 0;
+		if(elem == null) {
+			throw new NullPointerException();
+		}
+		if(times < 1) {
+			throw new IllegalArgumentException();
+		}
+		if(isEmpty()) {
+			throw new EmptyCollectionException("La lista está vacía");
+		}
+		DoubleNode<T> current = front;
+		int count = 0;
+		while(current != null && count < times) {
+			if(current.elem.equals(elem)) {
+				if(current.prev == null) {
+					front = current.next;
+					if(front != null) {
+						front.prev = null;
+					}
+				}else if(current.next == null) {
+					current.prev.next = null;
+				} else {
+					current.prev.next = current.next;
+					current.next.prev = current.prev;
+				}
+				count++;
+			}
+			current = current.next;
+		}
+		if(count == 0) {
+			throw new NoSuchElementException();
+		}
+		return count;
 	}
 
 
@@ -324,15 +354,37 @@ public class DoubleLinkedListImpl<T> implements DoubleList<T> {
 
 	@Override
 	public T removePenul() throws EmptyCollectionException {
-		// TODO Auto-generated method stub
-		return null;
+		if(isEmpty()) {
+			throw new EmptyCollectionException("La lista está vacía.");
+		}
+		if(size() == 1) {
+			throw new NoSuchElementException();
+		}
+		T removeElement = null;
+		DoubleNode<T> current = front;
+		while(current.next.next.next != null) {
+			current = current.next;
+		}
+		removeElement = current.next.elem;
+		current.next = current.next.next;
+		return removeElement;
 	}
 
 
 	@Override
 	public int countElem(T elem) {
-		// TODO Auto-generated method stub
-		return 0;
+		if(elem == null) {
+			throw new NullPointerException();
+		}
+		DoubleNode<T> current = front;
+		int count = 0;
+		while (current != null) {
+			if(current.elem.equals(elem)) {
+				count++;
+			}
+			current = current.next;
+		}
+		return count;
 	}
 
 

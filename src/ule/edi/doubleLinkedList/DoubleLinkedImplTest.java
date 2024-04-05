@@ -291,7 +291,7 @@ public class DoubleLinkedImplTest {
 	@Test
 	public void testRemoveN() throws EmptyCollectionException {
 		DoubleLinkedListImpl<String> lista = new DoubleLinkedListImpl<String>("2", "1", "2","2","3","1");
-			Assert.assertEquals("(2 1 2 2 3 1 )", lista.toString());
+		Assert.assertEquals("(2 1 2 2 3 1 )", lista.toString());
 		Assert.assertEquals(3, lista.removeN("2",5));
 		Assert.assertEquals("(1 3 1 )", lista.toString());
 		Assert.assertEquals(2, lista.removeN("1",3));
@@ -299,7 +299,41 @@ public class DoubleLinkedImplTest {
 		Assert.assertEquals(1, lista.removeN("3",1));
 		Assert.assertEquals("()", lista.toString());
 	}
+
+	@Test(expected = NullPointerException.class)
+	public void testRemoveNNullException() throws EmptyCollectionException {
+		DoubleLinkedListImpl<String> lista = new DoubleLinkedListImpl<String>("2", "1", "2","2","3","1");
+		Assert.assertEquals("(2 1 2 2 3 1 )", lista.toString());
+		Assert.assertEquals(3, lista.removeN(null,5));
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testRemoveNIllegalArgumentException() throws EmptyCollectionException {
+		DoubleLinkedListImpl<String> lista = new DoubleLinkedListImpl<String>("2", "1", "2","2","3","1");
+		Assert.assertEquals("(2 1 2 2 3 1 )", lista.toString());
+		Assert.assertEquals(3, lista.removeN("4",-4));
+	}
 	
+	@Test(expected = EmptyCollectionException.class)
+	public void testRemoveNEmptyException() throws EmptyCollectionException {
+		DoubleLinkedListImpl<String> lista = new DoubleLinkedListImpl<String>();
+		Assert.assertEquals(3, lista.removeN("4",4));
+	}
+
+	@Test(expected = NoSuchElementException.class)
+	public void testRemoveNNoSuchException() throws EmptyCollectionException {
+		DoubleLinkedListImpl<String> lista = new DoubleLinkedListImpl<String>("2", "1", "2","2","3","1");
+		Assert.assertEquals("(2 1 2 2 3 1 )", lista.toString());
+		Assert.assertEquals(3, lista.removeN("4",5));
+	}
+
+	@Test
+	public void testRemovePenult() throws EmptyCollectionException {
+		DoubleLinkedListImpl<String> lista = new DoubleLinkedListImpl<String>("2", "1", "2","2","3","1");
+		Assert.assertEquals("(2 1 2 2 3 1 )", lista.toString());
+		Assert.assertEquals(3, lista.removePenul());
+		Assert.assertEquals("(2 1 2 2 1 )", lista.toString());
+	}
 	
 	@Test(expected=NullPointerException.class)
 	public void testCountElem() {
