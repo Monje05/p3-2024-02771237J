@@ -96,11 +96,8 @@ public class DoubleLinkedListImpl<T> implements DoubleList<T> {
 
 	@Override
 	public void clear() {
-		DoubleNode<T> current = front;
-		while(current != last) {
-			current = current.next;
-			current = null;
-		}
+		front = null;
+		last = null;
 		
 	}
 
@@ -313,8 +310,13 @@ public class DoubleLinkedListImpl<T> implements DoubleList<T> {
 
 	@Override
 	public DoubleList<T> copy() {
-		// TODO Auto-generated method stub
-		return null;
+		DoubleList<T> copyList = new DoubleLinkedListImpl<>();
+		DoubleNode<T> current = front;
+		while(current != null) {
+			copyList.addLast(current.elem);
+			current = current.next;
+		}
+		return copyList;
 	}
 
 
@@ -333,21 +335,76 @@ public class DoubleLinkedListImpl<T> implements DoubleList<T> {
 	
 	@Override
 	public int maxRepeated() {
-	// TODO
-		return 0;
+	DoubleNode<T> current = front;
+	DoubleNode<T> aux = current;;
+	int maxRepeated = 0;
+	int max = 0;
+	while(current != null) {
+		while(aux != null) {
+			if(aux.elem.equals(current.elem)) {
+				maxRepeated++;
+			}
+			aux = aux.next;
+		}
+		if(maxRepeated > max) {
+			max = maxRepeated;
+		}
+		current = current.next;
+	}
+		return max;
 	}
 
 
 	@Override
 	public void addAfter(T elem, T target) {
-		// TODO Auto-generated method stub
-		
+		if(elem == null || target == null) {
+			throw new NullPointerException();
+		}
+		DoubleNode<T> current = front;
+		while(current != null) {
+			if(current.elem.equals(target)) {
+				DoubleNode<T> aux = new DoubleNode<T>(elem);
+				aux.prev = current;
+				aux.next = current.next;
+				if(current.next == null) {
+					last = aux;
+				} else {
+					current.next.prev = aux;
+				}
+			current.next = aux;
+			return;
+			}
+			current = current.next;
+		}
+		addLast(elem);
 	}
 
 
 	@Override
 	public void addAfterAll(T elem, T target) {
-		// TODO Auto-generated method stub
+		if(elem == null || target == null) {
+			throw new NullPointerException();
+		}
+		DoubleNode<T> current = front;
+		int count = 0;
+		while(current != null) {
+			if(current.elem.equals(target)) {
+				DoubleNode<T> aux = new DoubleNode<T>(elem);
+				aux.prev = current;
+				aux.next = current.next;
+				if(current.next == null) {
+					last = aux;
+				} else {
+					current.next.prev = aux;
+				}
+			current.next = aux;
+			count ++;
+			}
+			current = current.next;
+		}
+		if(count == 0) {
+			addLast(elem);
+		}
 		
 	}
 
@@ -410,22 +467,74 @@ public class DoubleLinkedListImpl<T> implements DoubleList<T> {
 	
 	@Override
 	public String toStringReverse() {
-		// TODO
-		return "";
+		StringBuilder result = new StringBuilder();
+		result.append("(");
+		DoubleNode<T> current = last;
+		while (current != null) {
+			result.append(current.elem.toString());
+			if(current.prev != null) {
+				result.append(" ");
+			}
+			current = current.prev;
+		}
+		result.append(" )");
+		return result.toString();
 	}
 
 
 	@Override
 	public String toStringFromUntil(int from, int until) {
-		// TODO
-				
-		return null;
+		if(from <= 0 || until <= 0 || until < from) {
+			throw new IllegalArgumentException();
+		}
+		StringBuilder result = new StringBuilder();
+		result.append("(");
+		DoubleNode<T> current = front;
+		if(from > size() && until > size()) {
+			result.append(")");
+			return result.toString();
+		}
+		for(int i = 1; i < from; i++) {
+			current = current.next;
+		}
+		int count = from;
+		while (current != null && count <= until) {
+			result.append(current.elem.toString());
+			if(current.next != null && count != until) {
+				result.append(" ");
+			}
+			current = current.next;
+			count++;
+		}
+		result.append(" )");
+		return result.toString();
 	}
 	
 	@Override
 	public String toStringFromUntilReverse(int from, int until) {
-		// TODO Auto-generated method stub
-		return null;
+		if (from <= 0 || until <= 0 || from < until) {
+			throw new IllegalArgumentException();
+		}
+		StringBuilder result = new StringBuilder();
+		result.append("(");
+		if (isEmpty()) {
+			result.append(")");
+			return result.toString();
+		}
+		DoubleNode<T> current = last;
+		for (int i = 1; i < from && current != null; i++) {
+			current = current.prev;
+		}
+		while (current != null && from >= until) {
+			result.append(current.elem.toString());
+			current = current.prev;
+			if (from > until) {
+				result.append(" ");
+			}
+			from--;
+		}
+		result.append(")");
+		return result.toString();
 	}
 
 

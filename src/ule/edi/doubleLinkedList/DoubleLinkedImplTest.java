@@ -1,5 +1,7 @@
 package ule.edi.doubleLinkedList;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -165,13 +167,37 @@ public class DoubleLinkedImplTest {
 		lista.addAfter("3", null);
 	}
 	
-	@Test(expected=NoSuchElementException.class)
-	public void testaddAfterInexistente() {
+	@Test public void testaddAfterInexistente() {
+		DoubleLinkedListImpl<String> lista = new DoubleLinkedListImpl<String>();
+		lista.addFirst("2");
+		lista.addLast("3");
+		lista.addLast("7");  
+		Assert.assertEquals("(2 3 7 )", lista.toString());
+		lista.addAfter("3", "4");
+		Assert.assertEquals("(2 3 7 3 )", lista.toString());
+	}
+
+	@Test
+	public void testaddAfterAll() {
 		DoubleLinkedListImpl<String> lista = new DoubleLinkedListImpl<String>();
 		lista.addFirst("2");
 		lista.addLast("3");
 		lista.addLast("7");
-		lista.addAfter("3", "4");
+		lista.addFirst("3");
+		Assert.assertEquals("(3 2 3 7 )", lista.toString());
+		lista.addAfterAll("1", "3");
+		Assert.assertEquals("(3 1 2 3 1 7 )", lista.toString());
+		lista.addAfterAll("4", "6");
+		Assert.assertEquals("(3 1 2 3 1 7 4 )", lista.toString());
+	}
+
+	@Test(expected=NullPointerException.class)
+	public void testaddAfterAllTargetNulo() {
+		DoubleLinkedListImpl<String> lista = new DoubleLinkedListImpl<String>();
+		lista.addFirst("2");
+		lista.addLast("3");
+		lista.addLast("7");
+		lista.addAfterAll("3", null);
 	}
 	
 	@Test
@@ -385,12 +411,29 @@ public class DoubleLinkedImplTest {
 	public void toStringFromUntilFromNegativoTest() {
 		listaConElems.toStringFromUntil(-3, 4);
 	}
+
+    @Test
+    public void testToStringFromUntilReverse() {
+		DoubleLinkedListImpl<String> lista = new DoubleLinkedListImpl<String>("2", "1", "2","2","3","1");
+        
+        assertEquals("(2 1 2 )", lista.toStringFromUntilReverse(3, 1));
+        assertEquals("(1 3 2 2 )", lista.toStringFromUntilReverse(10, 3));
+        assertEquals("(1 )", lista.toStringFromUntilReverse(20, 5));
+    }
 	
 	
 	@Test
 	public void toStringTest() {
 		Assert.assertEquals("()",  lv.toString());
 	}
+
+
+    @Test
+    public void testCopy() {
+        DoubleLinkedListImpl<String> originalList = new DoubleLinkedListImpl<>("3", "4", "6");
+        DoubleList<String> copiedList = originalList.copy();
+        assertEquals("(3 4 6 )", copiedList.toString());
+    }
 	
 	
 	@Test(expected=NoSuchElementException.class)
