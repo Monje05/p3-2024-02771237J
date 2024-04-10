@@ -357,7 +357,7 @@ public class DoubleLinkedImplTest {
 	public void testRemovePenult() throws EmptyCollectionException {
 		DoubleLinkedListImpl<String> lista = new DoubleLinkedListImpl<String>("2", "1", "2","2","3","1");
 		Assert.assertEquals("(2 1 2 2 3 1 )", lista.toString());
-		Assert.assertEquals(3, lista.removePenul());
+		Assert.assertEquals("3", lista.removePenul());
 		Assert.assertEquals("(2 1 2 2 1 )", lista.toString());
 	}
 	
@@ -418,7 +418,7 @@ public class DoubleLinkedImplTest {
         
         assertEquals("(2 1 2 )", lista.toStringFromUntilReverse(3, 1));
         assertEquals("(1 3 2 2 )", lista.toStringFromUntilReverse(10, 3));
-        assertEquals("(1 )", lista.toStringFromUntilReverse(20, 5));
+        assertEquals("(1 3 )", lista.toStringFromUntilReverse(20, 5));
     }
 	
 	
@@ -434,14 +434,95 @@ public class DoubleLinkedImplTest {
         DoubleList<String> copiedList = originalList.copy();
         assertEquals("(3 4 6 )", copiedList.toString());
     }
+
+	@Test
+	public void test_sameElems_correct() {
+		DoubleLinkedListImpl<String> originalList = new DoubleLinkedListImpl<>("3", "4", "6");
+		DoubleLinkedListImpl<String> otherList = new DoubleLinkedListImpl<>("3", "4", "6", "3", "4", "4");
+		DoubleLinkedListImpl<String> otherList2 = new DoubleLinkedListImpl<>("3", "4", "6", "7", "4");
+		Assert.assertTrue(originalList.sameElems(otherList));
+		Assert.assertFalse(originalList.sameElems(otherList2));
+	}
+
+	@Test(expected = NullPointerException.class)
+	public void test_sameElems_nullException() {
+		DoubleLinkedListImpl<String> originalList = new DoubleLinkedListImpl<>("3", "4", "6");
+		DoubleLinkedListImpl<String> otherList = new DoubleLinkedListImpl<>(null);
+		originalList.sameElems(otherList);
+	}
 	
 	
 	@Test(expected=NoSuchElementException.class)
 	public void IteratorNextEnVaciaTest() {
-
 		Iterator<String> iterador = lv.iterator();
 		Assert.assertFalse(iterador.hasNext());
 		iterador.next();
+	}
+
+	@Test
+	public void test_iterator_correct() {
+		lv.addFirst("4");
+		lv.addFirst("5");
+		lv.addFirst("3");
+		Iterator<String> iterador = lv.iterator();
+		Assert.assertTrue(iterador.hasNext());
+		Assert.assertEquals("3", iterador.next());
+		Assert.assertTrue(iterador.hasNext());
+		Assert.assertEquals("5", iterador.next());
+		Assert.assertTrue(iterador.hasNext());
+		Assert.assertEquals("4", iterador.next());
+		Assert.assertFalse(iterador.hasNext());
+	}
+
+	@Test(expected=NoSuchElementException.class)
+	public void test_iteratorReverse_noSuchException() {
+		Iterator<String> iterador = lv.reverseIterator();
+		Assert.assertFalse(iterador.hasNext());
+		iterador.next();
+	}
+
+	@Test
+	public void test_reverseiterator_correct() {
+		lv.addFirst("4");
+		lv.addFirst("5");
+		lv.addFirst("3");
+		Iterator<String> iterador = lv.reverseIterator();
+		Assert.assertTrue(iterador.hasNext());
+		Assert.assertEquals("4", iterador.next());
+		Assert.assertTrue(iterador.hasNext());
+		Assert.assertEquals("5", iterador.next());
+		Assert.assertTrue(iterador.hasNext());
+		Assert.assertEquals("3", iterador.next());
+		Assert.assertFalse(iterador.hasNext());
+	}
+
+	@Test(expected=NoSuchElementException.class)
+	public void test_iteratorProgress_noSuchException() {
+		Iterator<String> iterador = lv.progressIterator();
+		Assert.assertFalse(iterador.hasNext());
+		iterador.next();
+	}
+
+	@Test
+	public void test_progressiterator_correct() {
+		lv.addFirst("4");
+		lv.addFirst("5");
+		lv.addFirst("3");
+		lv.addFirst("6");
+		lv.addFirst("8");
+		lv.addFirst("3");
+		lv.addFirst("8");
+		lv.addFirst("9");
+		Iterator<String> iterador = lv.progressIterator();
+		Assert.assertTrue(iterador.hasNext());
+		Assert.assertEquals("9", iterador.next());
+		Assert.assertTrue(iterador.hasNext());
+		Assert.assertEquals("8", iterador.next());
+		Assert.assertTrue(iterador.hasNext());
+		Assert.assertEquals("8", iterador.next());
+		Assert.assertTrue(iterador.hasNext());
+		Assert.assertEquals("5", iterador.next());
+		Assert.assertFalse(iterador.hasNext());
 	}
 	
 	@Test(expected=NoSuchElementException.class)
