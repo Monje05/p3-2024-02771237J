@@ -356,9 +356,12 @@ public class DoubleLinkedImplTest {
 	@Test
 	public void testRemovePenult() throws EmptyCollectionException {
 		DoubleLinkedListImpl<String> lista = new DoubleLinkedListImpl<String>("2", "1", "2","2","3","1");
+		DoubleLinkedListImpl<String> lista2 = new DoubleLinkedListImpl<String>("2", "1");
 		Assert.assertEquals("(2 1 2 2 3 1 )", lista.toString());
 		Assert.assertEquals("3", lista.removePenul());
 		Assert.assertEquals("(2 1 2 2 1 )", lista.toString());
+		Assert.assertEquals("2", lista2.removePenul());
+		Assert.assertEquals("(1 )", lista2.toString());
 	}
 	
 	@Test(expected=NullPointerException.class)
@@ -380,8 +383,6 @@ public class DoubleLinkedImplTest {
 		Assert.assertEquals(3, lista.size());
 	}
 
-	
-
 	@Test
 	public void maxRepeatedTest() {
 		DoubleLinkedListImpl<String> lista = new DoubleLinkedListImpl<String>("2", "1", "2","2","3","1");
@@ -392,9 +393,6 @@ public class DoubleLinkedImplTest {
 		lista.clear();
 		Assert.assertEquals(0, lista.maxRepeated());
 	}
-
-
-	
 
 	@Test
 	public void toStringFromUntilTest() {
@@ -410,6 +408,8 @@ public class DoubleLinkedImplTest {
 	@Test(expected=IllegalArgumentException.class)
 	public void toStringFromUntilFromNegativoTest() {
 		listaConElems.toStringFromUntil(-3, 4);
+		listaConElems.toStringFromUntil(-3, -4);
+		listaConElems.toStringFromUntil(6, 4);
 	}
 
     @Test
@@ -441,13 +441,15 @@ public class DoubleLinkedImplTest {
 		DoubleLinkedListImpl<String> otherList = new DoubleLinkedListImpl<>("3", "4", "6", "3", "4", "4");
 		DoubleLinkedListImpl<String> otherList2 = new DoubleLinkedListImpl<>("3", "4", "6", "7", "4");
 		Assert.assertTrue(originalList.sameElems(otherList));
+		Assert.assertTrue(otherList.sameElems(originalList));
 		Assert.assertFalse(originalList.sameElems(otherList2));
+		Assert.assertFalse(otherList2.sameElems(originalList));
 	}
 
 	@Test(expected = NullPointerException.class)
 	public void test_sameElems_nullException() {
 		DoubleLinkedListImpl<String> originalList = new DoubleLinkedListImpl<>("3", "4", "6");
-		DoubleLinkedListImpl<String> otherList = new DoubleLinkedListImpl<>(null);
+		DoubleLinkedListImpl<String> otherList = new DoubleLinkedListImpl<>((String[])null);
 		originalList.sameElems(otherList);
 	}
 	
